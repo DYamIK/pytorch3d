@@ -104,21 +104,19 @@ def compute_extrinsic_matrix(
     azimuth: float, elevation: float, distance: float
 ):  # pragma: no cover
     """
-    Copied from meshrcnn codebase:
+    从meshrcnn代码库复制：
     https://github.com/facebookresearch/meshrcnn/blob/main/shapenet/utils/coords.py#L96
 
-    Compute 4x4 extrinsic matrix that converts from homogeneous world coordinates
-    to homogeneous camera coordinates. We assume that the camera is looking at the
-    origin.
-    Used in R2N2 Dataset when computing calibration matrices.
+    计算将齐次世界坐标转换为齐次相机坐标的4x4外参矩阵。我们假设相机正朝向原点。
+    在R2N2数据集中计算校准矩阵时使用。
 
-    Args:
-        azimuth: Rotation about the z-axis, in degrees.
-        elevation: Rotation above the xy-plane, in degrees.
-        distance: Distance from the origin.
+    参数:
+        azimuth: 绕z轴的旋转角度（单位：度）。
+        elevation: 高于xy平面的仰角（单位：度）。
+        distance: 与原点之间的距离。
 
-    Returns:
-        FloatTensor of shape (4, 4).
+    返回:
+        形状为(4, 4)的FloatTensor张量。
     """
     azimuth, elevation, distance = float(azimuth), float(elevation), float(distance)
 
@@ -153,30 +151,27 @@ def read_binvox_coords(
     dtype: torch.dtype = torch.float32,
 ):  # pragma: no cover
     """
-    Copied from meshrcnn codebase:
+   从meshrcnn代码库复制：
     https://github.com/facebookresearch/meshrcnn/blob/main/shapenet/utils/binvox_torch.py#L5
 
-    Read a binvox file and return the indices of all nonzero voxels.
+    读取一个binvox文件并返回所有非零体素的索引。
 
-    This matches the behavior of binvox_rw.read_as_coord_array
+    此功能与binvox_rw.read_as_coord_array的行为一致
     (https://github.com/dimatura/binvox-rw-py/blob/public/binvox_rw.py#L153)
-    but this implementation uses torch rather than numpy, and is more efficient
-    due to improved vectorization.
+    但本实现使用torch而非numpy，且由于改进了向量化而效率更高。
 
-    Georgia: I think that binvox_rw.read_as_coord_array actually has a bug; when converting
-    linear indices into three-dimensional indices, they use floating-point
-    division instead of integer division. We can reproduce their incorrect
-    implementation by passing integer_division=False.
+    Georgia：我认为binvox_rw.read_as_coord_array实际上存在一个bug；当将线性索引转换为三维索引时，
+    他们使用了浮点除法而非整数除法。我们可以通过传递integer_division=False来复现他们的错误实现。
 
-    Args:
-      f (str): A file pointer to the binvox file to read
-      integer_division (bool): If False, then match the buggy implementation from binvox_rw
-      dtype: Datatype of the output tensor. Use float64 to match binvox_rw
+    参数：
+      f（str）：指向要读取的binvox文件的文件指针
+      integer_division（bool）：如果为False，则匹配来自binvox_rw的有bug的实现
+      dtype：输出张量的数据类型。使用float64以匹配binvox_rw
 
-    Returns:
-      coords (tensor): A tensor of shape (N, 3) where N is the number of nonzero voxels,
-           and coords[i] = (x, y, z) gives the index of the ith nonzero voxel. If the
-           voxel grid has shape (V, V, V) then we have 0 <= x, y, z < V.
+    返回：
+      coords（tensor）：形状为(N, 3)的张量，其中N是非零体素的数量，
+          且coords[i] = (x, y, z)给出了第i个非零体素的索引。如果
+          体素网格的形状是(V, V, V)，那么我们有0 <= x, y, z < V。
     """
     size, translation, scale = _read_binvox_header(f)
     storage = torch.ByteStorage.from_buffer(f.read())
@@ -250,19 +245,18 @@ def _compute_idxs(vals, counts):  # pragma: no cover
 
 def _read_binvox_header(f):  # pragma: no cover
     """
-    Copied from meshrcnn codebase:
+    从meshrcnn代码库复制：
     https://github.com/facebookresearch/meshrcnn/blob/main/shapenet/utils/binvox_torch.py#L99
 
-    Read binvox header and extract information regarding voxel sizes and translations
-    to original voxel coordinates.
+    读取binvox文件头部信息，提取关于体素尺寸及转换到原始体素坐标的平移参数。
 
-    Args:
-        f (str): A file pointer to the binvox file to read.
+    参数:
+        f (str): 指向待读取binvox文件的文件指针。
 
-    Returns:
-        size (int): size of voxel.
-        translation (tuple(float)): translation to original voxel coordinates.
-        scale (float): scale to original voxel coordinates.
+    返回:
+        size (int): 体素尺寸。
+        translation (tuple(float)): 转换至原始体素坐标的平移量。
+        scale (float): 转换至原始体素坐标的比例因子。
     """
     # First line of the header should be "#binvox 1"
     line = f.readline().strip()

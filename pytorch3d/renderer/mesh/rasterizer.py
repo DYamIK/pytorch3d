@@ -170,15 +170,10 @@ class MeshRasterizer(nn.Module):
     def transform(self, meshes_world, **kwargs) -> torch.Tensor:
         """
         Args:
-            meshes_world: a Meshes object representing a batch of meshes with
-                vertex coordinates in world space.
-
+            meshes_world: 一个表示批量网格的Meshes对象，其顶点坐标位于世界空间内。
         Returns:
-            meshes_proj: a Meshes object with the vertex positions projected
-            in NDC space
-
-        NOTE: keeping this as a separate function for readability but it could
-        be moved into forward.
+            meshes_proj: 一个顶点位置投影在NDC空间中的网格对象
+        NOTE: 将此保留为独立函数以提升可读性，但亦可将其移至forward函数中。
         """
         cameras = kwargs.get("cameras", self.cameras)
         if cameras is None:

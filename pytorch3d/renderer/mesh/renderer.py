@@ -31,9 +31,7 @@ from ...structures.meshes import Meshes
 
 class MeshRenderer(nn.Module):
     """
-    A class for rendering a batch of heterogeneous meshes. The class should
-    be initialized with a rasterizer (a MeshRasterizer or a MeshRasterizerOpenGL)
-    and shader class which each have a forward function.
+    一个用于渲染异构网格批次的类。该类应通过光栅化器（MeshRasterizer或MeshRasterizerOpenGL）和着色器类进行初始化，这两个组件各自拥有前向处理功能。
     """
 
     def __init__(self, rasterizer, shader) -> None:
@@ -49,16 +47,12 @@ class MeshRenderer(nn.Module):
 
     def forward(self, meshes_world: Meshes, **kwargs) -> torch.Tensor:
         """
-        Render a batch of images from a batch of meshes by rasterizing and then
-        shading.
+        通过光栅化和着色处理，从一组网格渲染出一批图像。
 
-        NOTE: If the blur radius for rasterization is > 0.0, some pixels can
-        have one or more barycentric coordinates lying outside the range [0, 1].
-        For a pixel with out of bounds barycentric coordinates with respect to a
-        face f, clipping is required before interpolating the texture uv
-        coordinates and z buffer so that the colors and depths are limited to
-        the range for the corresponding face.
-        For this set rasterizer.raster_settings.clip_barycentric_coords=True
+        注意：如果光栅化的模糊半径大于0.0，某些像素可能会有一个或多个重心坐标超出[0, 1]范围。
+        对于相对于面f存在越界重心坐标的像素，在插值纹理uv坐标和z缓冲区之前需要进行裁剪，
+        以确保颜色和深度限制在该面对应的范围内。
+        为此，请设置rasterizer.raster_settings.clip_barycentric_coords=True
         """
         fragments = self.rasterizer(meshes_world, **kwargs)
         images = self.shader(fragments, meshes_world, **kwargs)

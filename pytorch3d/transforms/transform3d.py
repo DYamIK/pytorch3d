@@ -118,12 +118,9 @@ class Transform3d:
             s2_params -= lr * s2_params.grad
 
     CONVENTIONS
-    We adopt a right-hand coordinate system, meaning that rotation about an axis
-    with a positive angle results in a counter clockwise rotation.
+    我们采用右手坐标系，这意味着绕某轴旋转正角度时，将产生逆时针方向的旋转。
 
-    This class assumes that transformations are applied on inputs which
-    are row vectors. The internal representation of the Nx4x4 transformation
-    matrix is of the form:
+    本类假设变换应用于作为行向量的输入数据。Nx4x4变换矩阵的内部表示形式如下：
 
     .. code-block:: python
 
@@ -134,8 +131,7 @@ class Transform3d:
                 [Tx,  Ty,  Tz,  1],
             ]
 
-    To apply the transformation to points, which are row vectors, the latter are
-    converted to homogeneous (4D) coordinates and right-multiplied by the M matrix:
+    要将变换应用于点（即行向量），需先将这些点转换为齐次（4D）坐标，然后右乘M矩阵：
 
     .. code-block:: python
 

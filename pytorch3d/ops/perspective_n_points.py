@@ -112,14 +112,13 @@ def _null_space(m, kernel_dim):
 
 
 def _reproj_error(y_hat, y, weight, eps=1e-9):
-    """Projects estimated 3D points and computes the reprojection error
-    Args:
-        y_hat: a batch of predicted 2D points in homogeneous coordinates
-        y: a batch of ground-truth 2D points
-        weight: Batch of non-negative weights of
-            shape `(minibatch, num_point)`. `None` means equal weights.
-    Returns:
-        Optionally weighted RMSE of difference between y and y_hat.
+    """估计3D点并计算重投影误差
+    参数:
+        y_hat: 一批预测的齐次坐标下的2D点
+        y: 一批真实值2D点
+        weight: 形状为`(minibatch, num_point)`的非负权重批次。`None`表示等权重。
+    返回:
+        可选加权的y与y_hat之间差异的均方根误差(RMSE)。
     """
     y_hat = y_hat / torch.clamp(y_hat[..., 2:], eps)
     dist = ((y - y_hat[..., :2]) ** 2).sum(dim=-1, keepdim=True) ** 0.5

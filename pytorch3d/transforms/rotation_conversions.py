@@ -42,14 +42,14 @@ e.g.
 
 def quaternion_to_matrix(quaternions: torch.Tensor) -> torch.Tensor:
     """
-    Convert rotations given as quaternions to rotation matrices.
+    将四元数表示的旋转转换为旋转矩阵。
 
-    Args:
-        quaternions: quaternions with real part first,
-            as tensor of shape (..., 4).
+    参数：
+        quaternions：实部在前的四元数，
+            张量形状为(..., 4)。
 
-    Returns:
-        Rotation matrices as tensor of shape (..., 3, 3).
+    返回：
+        旋转矩阵，张量形状为(..., 3, 3)。
     """
     r, i, j, k = torch.unbind(quaternions, -1)
     # pyre-fixme[58]: `/` is not supported for operand types `float` and `Tensor`.
